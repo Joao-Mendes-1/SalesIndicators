@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "luUTlYQlxrdh3PIaC0stdYuB/ZAVa1S3rHyk9nu6hxY=",
+  "Source": "SalesIndicators.API",
+  "BasePath": "_content/SalesIndicators.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
