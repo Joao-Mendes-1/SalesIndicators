@@ -171,5 +171,39 @@ namespace SalesIndicators.API.Services
                 PageSize = filter.PageSize
             };
         }
+        // Exportação sem paginação
+        public async Task<List<SaleDto>> GetFilteredSalesRawAsync(SalesFilterDto filter)
+        {
+            var query = _context.Sales.AsNoTracking().AsQueryable();
+
+            if (filter.StartDate.HasValue)
+                query = query.Where(s => s.Date >= filter.StartDate.Value);
+
+            if (filter.EndDate.HasValue)
+                query = query.Where(s => s.Date <= filter.EndDate.Value);
+
+            if (!string.IsNullOrWhiteSpace(filter.Region))
+                query = query.Where(s => s.Region == filter.Region);
+
+            if (!string.IsNullOrWhiteSpace(filter.Product))
+                query = query.Where(s => s.Product == filter.Product);
+
+            var sales = await query
+                .OrderBy(s => s.Date)
+                .Select(s => new SaleDto
+                {
+                    Product = s.Product,
+                    Region = s.Region,
+                    Quantity = s.Quantity,
+                    UnitPrice = s.UnitPrice,
+                    CostPrice = s.CostPrice,
+                    Date = s.Date
+                })
+                .ToListAsync();
+
+            return sales;
+        }
+
+
     }
 }

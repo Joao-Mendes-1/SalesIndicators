@@ -25,6 +25,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Adicionar suporte ao Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+//csvExport
+builder.Services.AddScoped<CsvExportService>();
 
 var app = builder.Build();
 

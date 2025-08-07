@@ -9,10 +9,12 @@ namespace SalesIndicators.API.Controllers
     public class SalesController : ControllerBase
     {
         private readonly SalesService _salesService;
+        private readonly CsvExportService _csvExportService;
 
-        public SalesController(SalesService salesService)
+        public SalesController(SalesService salesService, CsvExportService csvExportService)
         {
             _salesService = salesService;
+            _csvExportService = csvExportService;
         }
 
         [HttpGet("total-revenue")]
@@ -65,5 +67,24 @@ namespace SalesIndicators.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("export")]
+        public async Task<IActionResult> ExportToCsv([FromQuery] SalesFilterDto filter)
+        {
+            var sales = await _salesService.GetFilteredSalesRawAsync(filter);
+
+            if (sales == null || !sales.Any())
+                return NotFound("Nenhuma venda encontrada com os filtros fornecidos.");
+
+            var csvBytes = _csvExportService.ExportSalesToCsv(sales);
+
+            return File(
+                fileContents: csvBytes,
+                contentType: "text/csv",
+                fileDownloadName: "relatorio-vendas.csv"
+            );
+        }
+
+
     }
+    
 }
